@@ -20,7 +20,6 @@ h = blockSize*sizeH + 40
 
 pygame.init()
 screen = pygame.display.set_mode((w, h))
-pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 startButton = pygame.Rect(w/2-27.5, h-30, 55, 25)
 font = pygame.font.SysFont('Comic Sans MS', 20)
