@@ -54,7 +54,7 @@ def main():
                 main()
             if event.type == pygame.QUIT:
                 isRunning = False
-
         pygame.display.update()
     pygame.quit()
-main()
+if(__init_ == '__main__'):
+    main()
