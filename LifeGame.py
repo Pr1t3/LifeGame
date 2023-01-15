@@ -10,7 +10,7 @@ def drawGrid(l, blockSize, screen, h, w):
             pygame.draw.rect(screen, color, rect, 1)
 
 def main():
-    l = [['0' for _ in range(15)] for __ in range(15)]
+    l = [['0' for _ in range(45)] for __ in range(30)]
     blockSize = 20
     sizeH = len(l)
     sizeW = len(l[0])
@@ -22,6 +22,8 @@ def main():
     startButton = pygame.Rect(w/2-27.5, h-30, 55, 25)
     font = pygame.font.SysFont('Comic Sans MS', 20)
     text = font.render('Start', False, (255,255,255))
+    prevMousePos = (0, 0)
+    isPainting = False
     isGameStarted = False
     isRunning = True
     while isRunning:
@@ -32,29 +34,38 @@ def main():
         if(isGameStarted == False):
             pygame.draw.rect(screen, (0, 155, 0), startButton)
             screen.blit(text, (w/2-27, h-33))
-            clock.tick(10)
+            clock.tick(60)
         drawGrid(l, blockSize, screen, h, w)
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                mousePos = event.pos
-                mouseCol, mouseRow = mousePos
-                for row in range(0, h-40, blockSize):
-                    for col in range(0, w, blockSize):                    
-                        if(row < mouseRow < row+blockSize):
-                            if(col < mouseCol < col+blockSize):
-                                if(l[row//blockSize][col//blockSize] == '1'):
-                                    l[row//blockSize][col//blockSize] = '0'
-                                elif(l[row//blockSize][col//blockSize] == '0'):
-                                    l[row//blockSize][col//blockSize] = '1'    
-                if(310 < mouseRow < 335):
-                    if(125 < mouseCol < 175):
-                        isGameStarted = True
-                        screen = pygame.display.set_mode((w, h-40))
+                isPainting = True
+            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+                isPainting = False
+            if(isPainting == True):
+                try:
+                    mousePos = event.pos
+                    mouseCol, mouseRow = mousePos
+                    for row in range(0, h-40, blockSize):
+                        for col in range(0, w, blockSize):                    
+                            if(row < mouseRow < row+blockSize):
+                                if(col < mouseCol < col+blockSize):
+                                    if(prevMousePos != (col, row)):
+                                        if(l[row//blockSize][col//blockSize] == '1'):
+                                            l[row//blockSize][col//blockSize] = '0'
+                                        elif(l[row//blockSize][col//blockSize] == '0'):
+                                            l[row//blockSize][col//blockSize] = '1' 
+                                        prevMousePos = (col, row)
+                    if(h-33 < mouseRow < h-33+25):
+                        if(w/2-28 < mouseCol < w/2-28+55):
+                            isGameStarted = True
+                            screen = pygame.display.set_mode((w, h-40))
+                except:
+                    isPainting = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 main()
             if event.type == pygame.QUIT:
                 isRunning = False
         pygame.display.update()
     pygame.quit()
-if(__init_ == '__main__'):
+if(__name__ == '__main__'):
     main()
